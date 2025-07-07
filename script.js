@@ -12,7 +12,7 @@ let ponFormContainer, jbFormContainer, fpFormContainer;
 let cancelPONForm, cancelJBForm, cancelFPForm;
 let ponForm, jbForm, fpForm;
 
-// Initialize map
+/*(// Initialize map
 async function initMap() {
   var map = L.map('map').setView([0, 0], 2);
   
@@ -98,6 +98,9 @@ function highlightTableRow(id, type) {
     }
   });
 }
+
+
+)*/
 
 // Load dashboard summaries
 async function loadDashboardSummaries() {
@@ -416,3 +419,64 @@ document.addEventListener("DOMContentLoaded", async () => {
     initAuthForm();
   }
 });
+
+
+
+
+
+
+
+const maintenanceForm = document.getElementById("maintenanceForm");
+if (maintenanceForm) {
+  maintenanceForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const asset_type = document.getElementById("assetType").value;
+    const asset_id = document.getElementById("assetId").value;
+    const description = document.getElementById("description").value;
+    const technician_name = document.getElementById("technician").value;
+    const status = document.getElementById("status").value;
+
+    const { error } = await supabase.from("maintenance_logs").insert([
+      { asset_type, asset_id, description, technician_name, status }
+    ]);
+
+    if (error) return alert("Error: " + error.message);
+    alert("Maintenance log submitted.");
+    e.target.reset();
+    loadLogs();
+  });
+}
+
+async function loadLogs() {
+  const typeFilterElem = document.getElementById("filterAssetType");
+  const statusFilterElem = document.getElementById("filterStatus");
+  const typeFilter = typeFilterElem ? typeFilterElem.value : "";
+  const statusFilter = statusFilterElem ? statusFilterElem.value : "";
+  let query = supabase.from("maintenance_logs").select("*").order("maintenance_date", { ascending: false });
+
+  if (typeFilter) query = query.eq("asset_type", typeFilter);
+  if (statusFilter) query = query.eq("status", statusFilter);
+
+  const { data, error } = await query;
+  if (error) return alert("Error fetching logs: " + error.message);
+
+  const tbody = document.querySelector("#logsTable tbody");
+  if (!tbody) return; // Prevent error if logsTable is not present
+  tbody.innerHTML = "";
+  data.forEach(log => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${log.asset_type}</td>
+        <td>${log.asset_id}</td>
+        <td>${log.description}</td>
+        <td>${log.technician_name}</td>
+        <td>${log.status}</td>
+        <td>${log.maintenance_date || ""}</td>
+      </tr>`;
+  });
+}
+
+window.onload = loadLogs;
+
+
+
