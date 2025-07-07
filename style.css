@@ -1,0 +1,65 @@
+/* Base styles */
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Custom button styles */
+.btn-primary {
+  background-color: #2563eb;
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8;
+}
+
+/* Form styles */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+/* Map styles */
+#map { 
+  z-index: 1;
+}
+
+/* Asset status badges */
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-active {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.status-inactive {
+  background-color: #e0f2fe;
+  color: #0284c7;
+}
+
+.status-faulty {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+/* Animation for showing/hiding forms */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.form-container {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .grid-cols-1-lg {
+    grid-template-columns: 1fr;
+  }
+}
